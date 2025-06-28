@@ -37,6 +37,6 @@ def show_image(image_path, label):
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    input_image = "images/test/fruit3.jpg"
+    input_image = "images/test/fruit2.jpg"
     result = predict(input_image)
     show_image(input_image, result)

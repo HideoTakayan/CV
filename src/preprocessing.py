@@ -5,9 +5,10 @@ from tensorflow.keras.layers import Rescaling
 from tensorflow.keras.callbacks import EarlyStopping
 import config
 
+
 class DataLoader:
     """
-    Class for loading, preprocessing and visualizing image data.
+    Lớp xử lý tải và tiền xử lý dữ liệu ảnh.
     """
 
     def __init__(self):
@@ -19,17 +20,18 @@ class DataLoader:
 
     def load_data(self):
         """
-        Load and preprocess dataset from directory.
+        Tải và chuẩn hóa dữ liệu từ thư mục chứa ảnh.
+        Mỗi thư mục con tương ứng với một class.
         """
         data_path = config.DATA_DIR
 
         if not os.path.exists(data_path) or not os.listdir(data_path):
-            raise FileNotFoundError(f"Dataset not found at: {data_path}. Please check your image folder.")
+            raise FileNotFoundError(f"Không tìm thấy thư mục dữ liệu: {data_path}")
 
-        print(f"Found dataset at: {data_path}")
-        print("Class folders found:", sorted(os.listdir(data_path)))
+        print(f"Found dataset folder: {data_path}")
+        print("Detected class folders:", sorted(os.listdir(data_path)))
 
-        # Load training and validation sets using split
+        # Chia train / validation tự động từ thư mục gốc
         self.train_data_org = tf.keras.utils.image_dataset_from_directory(
             data_path,
             validation_split=0.2,
@@ -52,16 +54,17 @@ class DataLoader:
 
         self.classes = self.train_data_org.class_names
 
-        # Normalize images to range [0, 1]
-        self.train_data = self.train_data_org.map(lambda x, y: (Rescaling(1./255)(x), y))
-        self.test_data = self.test_data_org.map(lambda x, y: (Rescaling(1./255)(x), y))
+        # Scale ảnh về [0, 1]
+        rescale_layer = Rescaling(1. / 255)
+        self.train_data = self.train_data_org.map(lambda x, y: (rescale_layer(x), y))
+        self.test_data = self.test_data_org.map(lambda x, y: (rescale_layer(x), y))
 
     def plot_samples(self):
         """
-        Display sample training images (9 random images).
+        Hiển thị 9 ảnh mẫu từ tập huấn luyện để kiểm tra.
         """
         if not self.train_data_org:
-            raise ValueError("Dataset not loaded. Call load_data() before plotting samples.")
+            raise ValueError("Chưa load dữ liệu. Gọi load_data() trước.")
 
         print("Displaying sample training images...")
         os.makedirs('results/plots', exist_ok=True)
@@ -79,15 +82,16 @@ class DataLoader:
 
     def get_classes(self):
         """
-        Return list of class names.
+        Trả về danh sách các class (tên thư mục con).
         """
         return self.classes
 
 
 class call_back:
     """
-    Callback configuration for model training.
+    Cài đặt callback cho quá trình huấn luyện.
     """
+
     def __init__(self):
         self.callback = None
 
@@ -102,7 +106,7 @@ class call_back:
         return self.callback
 
 
-# Run test when executing directly
+# Nếu chạy file này riêng lẻ
 if __name__ == "__main__":
     loader = DataLoader()
     loader.load_data()

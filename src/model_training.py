@@ -9,20 +9,21 @@ from tensorflow.keras.callbacks import EarlyStopping
 import config
 from preprocessing import DataLoader, call_back
 
-# === Buoc 1: Tai du lieu ===
-print("\n=== Buoc 1: Tai du lieu ===")
+# === Step 1: Load data ===
+print("\n=== Step 1: Load data ===")
 data_loader = DataLoader()
 data_loader.load_data()
 class_names = data_loader.get_classes()
-print(f"So lop: {len(class_names)}")
+print(f"Number of classes: {len(class_names)}")
 
-# === Buoc 2: Tai mo hinh goc (MobileNetV2) ===
-print("\n=== Buoc 2: Tai mo hinh MobileNetV2 ===")
+# === Step 2: Load base model (MobileNetV2) ===
+print("\n=== Step 2: Load base model (MobileNetV2) ===")
 base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=config.INPUT_SHAPE)
-base_model.trainable = False  # Giu nguyen trong so cua mo hinh tien huan luyen
+base_model.trainable = False  # Freeze pretrained weights
 
-# === Buoc 3: Xay dung mo hinh phan loai ===
-print("\n=== Buoc 3: Xay dung mo hinh phan loai ===")
+# === Step 3: Build classification model ===
+print("\n=== Step 3: Build classification model ===")
+
 def add_dense_block(model, units, l2_rate):
     model.add(Dense(units, kernel_regularizer=l2(l2_rate)))
     model.add(BatchNormalization())
@@ -43,8 +44,8 @@ model.compile(
 )
 model.summary()
 
-# === Buoc 4: Huan luyen mo hinh ===
-print("\n=== Buoc 4: Huan luyen mo hinh ===")
+# === Step 4: Train model ===
+print("\n=== Step 4: Train model ===")
 early_stop = EarlyStopping(
     monitor='val_loss',
     patience=6,
@@ -60,14 +61,20 @@ history = model.fit(
     callbacks=[call_back().get_callbacks(), early_stop]
 )
 
-# === Buoc 5: Luu mo hinh ===
-print("\n=== Buoc 5: Luu mo hinh ===")
+# === Step 5: Save model and metadata ===
+print("\n=== Step 5: Save model ===")
 model.save(config.MODEL_SAVE_PATH)
 
-with open(config.MODEL_HISTORY_PATH, 'w') as f:
+# Save training history
+with open(config.MODEL_HISTORY_PATH, 'w', encoding='utf-8') as f:
     json.dump(history.history, f)
 
-with open(config.MODEL_ARCHITECTURE_PATH, 'w') as f:
+# Save model architecture
+with open(config.MODEL_ARCHITECTURE_PATH, 'w', encoding='utf-8') as f:
     json.dump(model.to_json(), f)
 
-print("\nHoan tat huan luyen va luu mo hinh.")
+# Save label mapping (class index to label)
+with open(config.LABEL_MAP_PATH, 'w', encoding='utf-8') as f:
+    json.dump({i: label for i, label in enumerate(class_names)}, f, ensure_ascii=False)
+
+print("\nTraining complete. Model and metadata saved.")
