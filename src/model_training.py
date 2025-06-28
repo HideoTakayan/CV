@@ -9,20 +9,20 @@ from tensorflow.keras.callbacks import EarlyStopping
 import config
 from preprocessing import DataLoader, call_back
 
-# === Bước 1: Tải dữ liệu ===
-print("\n=== Bước 1: Tải dữ liệu ===")
+# === Buoc 1: Tai du lieu ===
+print("\n=== Buoc 1: Tai du lieu ===")
 data_loader = DataLoader()
 data_loader.load_data()
 class_names = data_loader.get_classes()
-print(f"Số lớp: {len(class_names)}")
+print(f"So lop: {len(class_names)}")
 
-# === Bước 2: Tải mô hình gốc (MobileNetV2) ===
-print("\n=== Bước 2: Tải mô hình MobileNetV2 ===")
+# === Buoc 2: Tai mo hinh goc (MobileNetV2) ===
+print("\n=== Buoc 2: Tai mo hinh MobileNetV2 ===")
 base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=config.INPUT_SHAPE)
-base_model.trainable = False  # Giữ nguyên trọng số của mô hình tiền huấn luyện
+base_model.trainable = False  # Giu nguyen trong so cua mo hinh tien huan luyen
 
-# === Bước 3: Xây dựng mô hình phân loại ===
-print("\n=== Bước 3: Xây dựng mô hình phân loại ===")
+# === Buoc 3: Xay dung mo hinh phan loai ===
+print("\n=== Buoc 3: Xay dung mo hinh phan loai ===")
 def add_dense_block(model, units, l2_rate):
     model.add(Dense(units, kernel_regularizer=l2(l2_rate)))
     model.add(BatchNormalization())
@@ -43,8 +43,8 @@ model.compile(
 )
 model.summary()
 
-# === Bước 4: Huấn luyện mô hình ===
-print("\n=== Bước 4: Huấn luyện mô hình ===")
+# === Buoc 4: Huan luyen mo hinh ===
+print("\n=== Buoc 4: Huan luyen mo hinh ===")
 early_stop = EarlyStopping(
     monitor='val_loss',
     patience=6,
@@ -60,8 +60,8 @@ history = model.fit(
     callbacks=[call_back().get_callbacks(), early_stop]
 )
 
-# === Bước 5: Lưu mô hình ===
-print("\n=== Bước 5: Lưu mô hình ===")
+# === Buoc 5: Luu mo hinh ===
+print("\n=== Buoc 5: Luu mo hinh ===")
 model.save(config.MODEL_SAVE_PATH)
 
 with open(config.MODEL_HISTORY_PATH, 'w') as f:
@@ -70,4 +70,4 @@ with open(config.MODEL_HISTORY_PATH, 'w') as f:
 with open(config.MODEL_ARCHITECTURE_PATH, 'w') as f:
     json.dump(model.to_json(), f)
 
-print("\n✅ Huấn luyện và lưu mô hình hoàn tất.")
+print("\nHoan tat huan luyen va luu mo hinh.")

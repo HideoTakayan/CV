@@ -26,8 +26,8 @@ class DataLoader:
         if not os.path.exists(data_path) or not os.listdir(data_path):
             raise FileNotFoundError(f"Dataset not found at: {data_path}. Please check your image folder.")
 
-        print(f"✅ Found dataset at: {data_path}")
-        print("📁 Class folders:", sorted(os.listdir(data_path)))
+        print(f"Found dataset at: {data_path}")
+        print("Class folders found:", sorted(os.listdir(data_path)))
 
         # Load training and validation sets using split
         self.train_data_org = tf.keras.utils.image_dataset_from_directory(
@@ -63,7 +63,7 @@ class DataLoader:
         if not self.train_data_org:
             raise ValueError("Dataset not loaded. Call load_data() before plotting samples.")
 
-        print("📷 Displaying sample training images...")
+        print("Displaying sample training images...")
         os.makedirs('results/plots', exist_ok=True)
 
         plt.figure(figsize=(10, 10))
@@ -102,7 +102,7 @@ class call_back:
         return self.callback
 
 
-# Test when running this file directly
+# Run test when executing directly
 if __name__ == "__main__":
     loader = DataLoader()
     loader.load_data()
