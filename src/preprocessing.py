@@ -8,7 +8,7 @@ import config
 
 class DataLoader:
     """
-    Lớp xử lý tải và tiền xử lý dữ liệu ảnh.
+    Class dung de load, tien xu ly va ve du lieu anh trai cay.
     """
 
     def __init__(self):
@@ -20,18 +20,19 @@ class DataLoader:
 
     def load_data(self):
         """
-        Tải và chuẩn hóa dữ liệu từ thư mục chứa ảnh.
-        Mỗi thư mục con tương ứng với một class.
+        Tai va xu ly du lieu anh tu thu muc goc.
+        Cac thu muc con la ten lop (label), chia thanh 80% train va 20% validation.
         """
         data_path = config.DATA_DIR
 
         if not os.path.exists(data_path) or not os.listdir(data_path):
-            raise FileNotFoundError(f"Không tìm thấy thư mục dữ liệu: {data_path}")
+            raise FileNotFoundError(f"Khong tim thay du lieu hoac thu muc rong: {data_path}")
 
-        print(f"Found dataset folder: {data_path}")
-        print("Detected class folders:", sorted(os.listdir(data_path)))
+        class_folders = sorted(os.listdir(data_path))
+        print(f"Thu muc du lieu: {data_path}")
+        print(f"Cac lop phat hien: {class_folders}")
 
-        # Chia train / validation tự động từ thư mục gốc
+        # Load du lieu train/validation
         self.train_data_org = tf.keras.utils.image_dataset_from_directory(
             data_path,
             validation_split=0.2,
@@ -54,19 +55,31 @@ class DataLoader:
 
         self.classes = self.train_data_org.class_names
 
-        # Scale ảnh về [0, 1]
-        rescale_layer = Rescaling(1. / 255)
-        self.train_data = self.train_data_org.map(lambda x, y: (rescale_layer(x), y))
-        self.test_data = self.test_data_org.map(lambda x, y: (rescale_layer(x), y))
+        # Rescale ve khoang [0,1] va toi uu voi cache + prefetch
+        rescale = Rescaling(1.0 / 255)
+
+        self.train_data = (
+            self.train_data_org
+            .map(lambda x, y: (rescale(x), y), num_parallel_calls=config.AUTOTUNE)
+            .cache()
+            .prefetch(buffer_size=config.AUTOTUNE)
+        )
+
+        self.test_data = (
+            self.test_data_org
+            .map(lambda x, y: (rescale(x), y), num_parallel_calls=config.AUTOTUNE)
+            .cache()
+            .prefetch(buffer_size=config.AUTOTUNE)
+        )
 
     def plot_samples(self):
         """
-        Hiển thị 9 ảnh mẫu từ tập huấn luyện để kiểm tra.
+        Hien thi 9 anh ngau nhien tu tap huan luyen.
         """
         if not self.train_data_org:
-            raise ValueError("Chưa load dữ liệu. Gọi load_data() trước.")
+            raise ValueError("Chua load du lieu. Goi load_data() truoc khi ve.")
 
-        print("Displaying sample training images...")
+        print("Dang ve anh mau tu tap train...")
         os.makedirs('results/plots', exist_ok=True)
 
         plt.figure(figsize=(10, 10))
@@ -76,20 +89,21 @@ class DataLoader:
                 plt.imshow(images[i].numpy().astype("uint8"))
                 plt.title(self.classes[labels[i]])
                 plt.axis("off")
+
         plt.tight_layout()
         plt.savefig(config.SAMPLE_PLOT_PATH)
         plt.show()
 
     def get_classes(self):
         """
-        Trả về danh sách các class (tên thư mục con).
+        Tra ve danh sach lop.
         """
         return self.classes
 
 
 class call_back:
     """
-    Cài đặt callback cho quá trình huấn luyện.
+    Callback dung de dung som neu model khong cai thien.
     """
 
     def __init__(self):
@@ -106,7 +120,7 @@ class call_back:
         return self.callback
 
 
-# Nếu chạy file này riêng lẻ
+# Chay thu nghiem khi run truc tiep file
 if __name__ == "__main__":
     loader = DataLoader()
     loader.load_data()

@@ -9,20 +9,25 @@ from tensorflow.keras.callbacks import EarlyStopping
 import config
 from preprocessing import DataLoader, call_back
 
-# === Step 1: Load data ===
-print("\n=== Step 1: Load data ===")
+# === Buoc 1: Tai du lieu ===
+print("\n Buoc 1: Dang tai du lieu...")
 data_loader = DataLoader()
 data_loader.load_data()
 class_names = data_loader.get_classes()
-print(f"Number of classes: {len(class_names)}")
+print(f" So lop: {len(class_names)}")
+print(" Cac lop:", class_names)
 
-# === Step 2: Load base model (MobileNetV2) ===
-print("\n=== Step 2: Load base model (MobileNetV2) ===")
-base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=config.INPUT_SHAPE)
-base_model.trainable = False  # Freeze pretrained weights
+# === Buoc 2: Tai mo hinh goc ===
+print("\n Buoc 2: Dang tai mo hinh MobileNetV2...")
+base_model = MobileNetV2(
+    weights='imagenet',
+    include_top=False,
+    input_shape=config.INPUT_SHAPE
+)
+base_model.trainable = False  # Dong bang mo hinh goc
 
-# === Step 3: Build classification model ===
-print("\n=== Step 3: Build classification model ===")
+# === Buoc 3: Xay dung mo hinh phan loai ===
+print("\n Buoc 3: Dang xay dung mo hinh phan loai...")
 
 def add_dense_block(model, units, l2_rate):
     model.add(Dense(units, kernel_regularizer=l2(l2_rate)))
@@ -37,15 +42,18 @@ add_dense_block(model, 256, 0.01)
 add_dense_block(model, 128, 0.005)
 model.add(Dense(len(class_names), activation='softmax'))
 
+# Bien dich mo hinh
 model.compile(
     optimizer=config.OPTIMIZER,
     loss='sparse_categorical_crossentropy',
     metrics=['accuracy']
 )
+
 model.summary()
 
-# === Step 4: Train model ===
-print("\n=== Step 4: Train model ===")
+# === Buoc 4: Huan luyen mo hinh ===
+print("\n Buoc 4: Dang huan luyen mo hinh...")
+
 early_stop = EarlyStopping(
     monitor='val_loss',
     patience=6,
@@ -61,20 +69,22 @@ history = model.fit(
     callbacks=[call_back().get_callbacks(), early_stop]
 )
 
-# === Step 5: Save model and metadata ===
-print("\n=== Step 5: Save model ===")
+# === Buoc 5: Luu mo hinh va thong tin ===
+print("\n Buoc 5: Dang luu mo hinh va thong tin...")
+
+# Luu mo hinh .h5
 model.save(config.MODEL_SAVE_PATH)
 
-# Save training history
+# Luu lich su huan luyen
 with open(config.MODEL_HISTORY_PATH, 'w', encoding='utf-8') as f:
-    json.dump(history.history, f)
+    json.dump(history.history, f, ensure_ascii=False, indent=2)
 
-# Save model architecture
+# Luu cau truc mo hinh (.json string)
 with open(config.MODEL_ARCHITECTURE_PATH, 'w', encoding='utf-8') as f:
-    json.dump(model.to_json(), f)
+    f.write(model.to_json())
 
-# Save label mapping (class index to label)
+# Luu danh sach ten lop
 with open(config.LABEL_MAP_PATH, 'w', encoding='utf-8') as f:
-    json.dump({i: label for i, label in enumerate(class_names)}, f, ensure_ascii=False)
+    json.dump({i: label for i, label in enumerate(class_names)}, f, ensure_ascii=False, indent=2)
 
-print("\nTraining complete. Model and metadata saved.")
+print("\n Da huan luyen xong. Mo hinh va thong tin da duoc luu.")
