@@ -1,12 +1,11 @@
 import os
 import tensorflow as tf
 
-# ===== Cấu hình huấn luyện =====
 INPUT_SHAPE = (224, 224, 3)
 ACTIVATION_FUNCTION = 'relu'
 LEARNING_RATE = 0.001
 OPTIMIZER = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE)
-EPOCHS = 50
+EPOCHS = 35
 BATCH_SIZE = 16
 
 # ===== Dữ liệu =====
