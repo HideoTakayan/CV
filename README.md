@@ -11,34 +11,34 @@ Dự án này triển khai một giải pháp phân loại ảnh tiên tiến s�
 CV/
 │
 ├── data/
-│ ├── archive (6).zip
-│ └── MY_data
-│ ├── train/  # Ảnh huấn luyện
-│ ├── test/ # Ảnh kiểm thử
-│ └── prediction/ # Ảnh để dự đoán
+│   └── MY_data/
+│       ├── train/           # Ảnh huấn luyện
+│       ├── test/            # Ảnh kiểm thử
+│       └── prediction/      # Ảnh để dự đoán
 │
 ├── src/
-│ ├── preprocessing.py # Xử lý và trực quan hóa dữ liệu
-│ ├── model_training.py # Script huấn luyện mô hình
-│ ├── classify.py # Script dự đoán hình ảnh
-│ └── config.py # Cấu hình dự án tập trung
+│   ├── preprocessing.py     # Xử lý và trực quan hóa dữ liệu
+│   ├── model_training.py    # Script huấn luyện mô hình
+│   ├── classify.py          # Script dự đoán hình ảnh
+│   └── config.py            # Cấu hình dự án tập trung
 │
-├── results/ # Thư mục lưu kết quả
-│ ├── plots/
-│ │ └── sample_plot.png
-│ ├── model_architecture.json
-│ └── classifier_history.json
+├── results/                 # Thư mục lưu kết quả
+│   ├── plots/
+│   │   └── sample_plot.png
+│   ├── model_architecture.json
+│   └── classifier_history.json
 │
-├── trained models/
-│ └── fruit_classifier_model.h5
+├── trained_models/
+│   └── fruit_classifier_model.h5
 │
 ├── web_app/
-│ ├── app.py # Backend Flask
-│ ├── templates/ # Giao diện HTML
-│ └── static/uploads/ # Ảnh người dùng upload
+│   ├── app.py               # Backend Flask
+│   ├── templates/           # Giao diện HTML
+│   └── static/
+│       └── uploads/         # Ảnh người dùng upload
 │
-├── requirements.txt
-└── README.md
+├── requirements.txt         # Danh sách thư viện cần cài
+└── README.md                # Tài liệu hướng dẫn dự án
 
 
 ## Tính Năng Nổi Bật
@@ -63,8 +63,8 @@ CV/
 
 1. **Tải mã nguồn**
    ```bash
-   git clone https://github.com/Nirikshan95/FruitClassifier.git
-   cd FruitClassifier
+   git clone https://github.com/HideoTakayan/CV.git
+   cd CV
    ```
 
 2. **Cài đặt thư viện**
@@ -73,77 +73,94 @@ CV/
    ```
 
 3. **Chuẩn bị dữ liệu**
-   * Download "Fruit Classification (10 Class)" dataset from Kaggle
-   * Place `archive (6).zip` in the `data/` directory
-   * The preprocessing script will handle extraction
+   * Dữ liệu đã được chuẩn bị sẵn trong thư mục data/
+   * Bạn không cần tải thêm hay giải nén gì cả
+   * Có thể sử dụng trực tiếp để huấn luyện và chạy web/app
 
-## Usage
+## Sử dụng:
 
-### 1. Train the Model
+### 1. Huấn luyện mô hình
 
 ```bash
 python src/model_training.py
 ```
 
-### 2. Predict New Images
+### 2. Dự đoán ảnh mới
 
 ```bash
 python src/classify.py
 ```
 *Note: Update `demo_img` path in `classify.py` with your image*
 
-### 3. Visualize Dataset
+### 3. Trực quan hóa tập dữ liệu
 
 ```bash
 python src/preprocessing.py
 ```
+### 4. Chạy ứng dụng web
 
-## Configuration
+```bash
+python web_app/app.py
+```
+Sau khi chạy, mở trình duyệt và truy cập http://127.0.0.1:5000 để sử dụng giao diện web phân loại trái cây.  
 
-The `config.py` file centralizes project configurations:
+## Cấu hình dự án
+
+Tệp  `config.py` fdùng để quản lý tập trung toàn bộ cấu hình của dự án:
 
 ```python
 # Paths
-DATA_DIR = "./data"
-ZIP_FILE_PATH = "./data/archive (6).zip"
-TRAINING_DATA = "./data/MY_data/train/"
-TESTING_DATA = "./data/MY_data/test/"
-PREDICTION_DATA = "./data/MY_data/prediction/"
-MODEL_SAVE_PATH = "./trained models/fruit_classifier_model.h5"
-MODEL_HISTORY_PATH = "./results/classifier_history.json"
-MODEL_ARCHITECTURE_PATH="./results/model_architecture.json"
-SAMPLE_PLOT_PATH="./results/plots/sample_plot.png"
+DATA_DIR = os.path.join(BASE_DIR, "data")
+TRAINING_DATA = os.path.join(DATA_DIR, "MY_data", "train")
+TESTING_DATA = os.path.join(DATA_DIR, "MY_data", "test")
+PREDICTION_DATA = os.path.join(DATA_DIR, "MY_data", "predict")
+
+MODEL_SAVE_PATH = os.path.join(BASE_DIR, "trained_models", "fruit_classifier_model.h5")
+MODEL_HISTORY_PATH = os.path.join(BASE_DIR, "results", "classifier_history.json")
+MODEL_ARCHITECTURE_PATH = os.path.join(BASE_DIR, "results", "model_architecture.json")
+SAMPLE_PLOT_PATH = os.path.join(BASE_DIR, "results", "plots", "sample_plot.png")
+
 
 # Hyperparameters
-BATCH_SIZE = 32
-EPOCHS = 10
+BATCH_SIZE = 64
+EPOCHS = 30
 OPTIMIZER = "adam"
+SHUFFLE = True
+SEED = 42
 
 # Model Parameters
-INPUT_SHAPE = (224,224,3)
+INPUT_SHAPE = (224, 224, 3)
 ACTIVATION_FUNCTION = "relu"
 ```
 
-## Results
+## Kết Quả Huấn Luyện
 
-* **Trained Model**: `fruit_classifier_model.h5`
-* **Model Architecture**: `results/model_architecture.json`
-* **Performance Metrics**: 
-  - Training accuracy
-  - Validation accuracy
+* **Mô hình đã huấn luyện**: `fruit_classifier_model.h5`  
+* **Kiến trúc mô hình**: `results/model_architecture.json`  
+* **Chỉ số đánh giá hiệu năng**: 
+  - Độ chính xác trên tập huấn luyện (Training Accuracy)  
+  - Độ chính xác trên tập kiểm thử (Validation Accuracy)  
 
-## Future Roadmap
 
-- [ ] Expand fruit class diversity
-- [ ] Fine-tune model architecture
-- [ ] Implement advanced data augmentation
-- [ ] Add model interpretability features
+## Định Hướng Phát Triển Tương Lai  
+🔍 Về mô hình phân loại  
+- [ ] Mở rộng số lượng và chủng loại trái cây được nhận diện
+- [ ] Tinh chỉnh kiến trúc mô hình để nâng cao độ chính xác
+- [ ] Áp dụng các kỹ thuật tăng cường dữ liệu nâng cao
+- [ ] Tích hợp tính năng giải thích dự đoán của mô hình (Model Interpretability)
 
-## References
+🌐 Về giao diện và trải nghiệm web  
+- [ ] Thiết kế giao diện người dùng (UI) hiện đại, thân thiện với thiết bị di động  
+- [ ] Cho phép chụp ảnh trực tiếp từ webcam để phân loại  
+- [ ] Hiển thị biểu đồ tỷ lệ dự đoán cho từng loại trái cây  
+- [ ] Thêm lịch sử dự đoán và thống kê người dùng  
 
-1. [Kaggle Fruit Classification Dataset](https://www.kaggle.com/datasets/karimabdulnabi/fruit-classification10-class)
+
+
+## Tài liệu tham khảo
+
+1. [Fruit Image Classification](https://github.com/Nirikshan95/FruitClassifier)
 2. MobileNetV2 Research Paper
-
-## Contributions
-
-Contributions, issues, and feature requests are welcome!
+3. Dataset (Quên nguồn)
+## Đóng Góp & Góp Ý
+Chúng tôi luôn hoan nghênh mọi đóng góp từ cộng đồng!
