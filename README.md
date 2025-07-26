@@ -90,7 +90,7 @@ python src/model_training.py
 ```bash
 python src/classify.py
 ```
-*Note: Update `demo_img` path in `classify.py` with your image*
+**Lưu ý**: Cập nhật biến `demo_anh` trong file `classify.py` thành đường dẫn tới ảnh bạn muốn dự đoán.
 
 ### 3. Trực quan hóa tập dữ liệu
 
