@@ -6,7 +6,6 @@ Dự án này triển khai một giải pháp phân loại ảnh tiên tiến s�
 
 ## Cấu Trúc Dự Án
 
-
 ```
 CV/
 │
@@ -40,6 +39,7 @@ CV/
 ├── requirements.txt         # Danh sách thư viện cần cài
 └── README.md                # Tài liệu hướng dẫn dự án
 
+```
 
 ## Tính Năng Nổi Bật
 
