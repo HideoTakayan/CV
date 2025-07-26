@@ -106,7 +106,7 @@ Sau khi chạy, mở trình duyệt và truy cập http://127.0.0.1:5000 để s
 
 ## Cấu hình dự án
 
-Tệp  `config.py` fdùng để quản lý tập trung toàn bộ cấu hình của dự án:
+Tệp  `config.py` dùng để quản lý tập trung toàn bộ cấu hình của dự án:
 
 ```python
 # Paths
