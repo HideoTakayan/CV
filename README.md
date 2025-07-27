@@ -34,7 +34,8 @@ CV/
 │   ├── app.py               # Backend Flask
 │   ├── templates/           # Giao diện HTML
 │   └── static/
-│       └── uploads/         # Ảnh người dùng upload
+│       ├── uploads/         # Ảnh người dùng upload
+|       └── style.css        # Làm đẹp giao diện web
 │
 ├── requirements.txt         # Danh sách thư viện cần cài
 └── README.md                # Tài liệu hướng dẫn dự án

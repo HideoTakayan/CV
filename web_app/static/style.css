@@ -1,0 +1,135 @@
+/* === Mobile First (mặc định cho màn nhỏ) === */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #f0faff, #e6ffe6);
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-shadow: 1px 1px 2px #d0f0ff;
+}
+
+form {
+    margin-top: 20px;
+}
+
+input[type="file"] {
+    padding: 12px;
+    margin-top: 10px;
+    width: 100%;
+    border: 2px dashed #a0c4ff;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+input[type="file"]:hover {
+    border-color: #74c69d;
+}
+
+button {
+    margin-top: 18px;
+    padding: 12px 20px;
+    width: 100%;
+    background: linear-gradient(135deg, #00c9a7, #92fe9d);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.4s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #2af598, #009efd);
+    transform: scale(1.03);
+}
+
+.image-section {
+    margin-top: 30px;
+}
+
+img {
+    margin-top: 15px;
+    width: 100%;
+    max-width: 300px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.02);
+}
+
+.result {
+    margin-top: 25px;
+    font-size: 18px;
+    color: #444;
+    background: #f1fdf4;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid #28a745;
+    box-shadow: 0 2px 8px rgba(0, 128, 0, 0.1);
+}
+
+/* === Laptop (≥768px) === */
+@media (min-width: 768px) {
+    .container {
+        width: 80%;
+        max-width: 700px;
+        padding: 35px;
+    }
+
+    input[type="file"] {
+        width: 90%;
+    }
+
+    button {
+        width: auto;
+        padding: 12px 40px;
+    }
+
+    img {
+        max-width: 350px;
+    }
+}
+
+/* === Desktop (≥1024px) === */
+@media (min-width: 1024px) {
+    .container {
+        width: 60%;
+        max-width: 900px;
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    .result {
+        font-size: 20px;
+    }
+
+    img {
+        max-width: 400px;
+    }
+}
