@@ -6,7 +6,7 @@ import config
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 
-# Danh sach cac nhan tuong ung voi cac lop
+# Danh sách các nhãn tương ứng với các lớp
 NHAN = [
     "bo", "ca chua", "cam", "chanh", "cherry", "chom chom", "chuoi", "dau tay", "du du",
     "dua", "dua hau", "dua luoi", "hat dieu", "hat ngo", "hong", "kiwi", "khe", "le",
@@ -30,16 +30,16 @@ def du_doan(duong_dan):
     """
     Du doan loai trai cay tu anh.
     """
-    # Tai mo hinh
+    # Tải mô hình
     if not os.path.exists(config.MODEL_SAVE_PATH):
         raise FileNotFoundError("Khong tim thay mo hinh da train. Hay train truoc hoac kiem tra duong dan.")
     
     mo_hinh = tf.keras.models.load_model(config.MODEL_SAVE_PATH)
 
-    # Xu ly dau vao
+    # Xử lý đầu vào
     dau_vao = xu_ly_anh(duong_dan)
 
-    # Du doan
+    # Dự đoán
     ket_qua = mo_hinh.predict(dau_vao)
     chi_so = np.argmax(ket_qua)
     xac_suat = float(np.max(ket_qua)) * 100
@@ -64,9 +64,9 @@ def hien_thi_anh(duong_dan):
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    # Duong dan toi anh test
+    # Đường dẫn tới ảnh dùng để kiểm thử
     demo_anh = r"D:\CV\data\MY_data\predict\1 (19).jpeg"
 
-    # Du doan va hien thi
+    # Dự đoán và hiển thị ảnh
     loai_qua, ti_le = du_doan(demo_anh)
     hien_thi_anh(demo_anh)
