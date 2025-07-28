@@ -65,7 +65,7 @@ def hien_thi_anh(duong_dan):
 
 if __name__ == "__main__":
     # Duong dan toi anh test
-    demo_anh = r"D:\CV\data\MY_data\predict\1 (1).webp"
+    demo_anh = r"D:\CV\data\MY_data\predict\1 (19).jpeg"
 
     # Du doan va hien thi
     loai_qua, ti_le = du_doan(demo_anh)
