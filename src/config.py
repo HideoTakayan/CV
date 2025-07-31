@@ -18,8 +18,8 @@ SAMPLE_PLOT_PATH = os.path.join(BASE_DIR, "results", "plots", "sample_plot.png")
 # Các siêu tham số huấn luyện
 BATCH_SIZE = 64
 EPOCHS = 30
-OPTIMIZER = "adam"
-SHUFFLE = True
+OPTIMIZER = "adam" #Adaptive Moment Estimation
+SHUFFLE = True 
 SEED = 42
 
 # Tham số của mô hình

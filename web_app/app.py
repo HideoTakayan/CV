@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for 
 from werkzeug.utils import secure_filename
 import os
 import sys
@@ -20,7 +20,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Hàm kiểm tra định dạng file hợp lệ
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS # Kiểm tra phần mở rộng file
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -34,8 +34,8 @@ def index():
             return redirect(request.url)
 
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            filename = secure_filename(file.filename) 
+            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename) # Lưu file vào thư mục uploads
             file.save(filepath)
 
             # Dự đoán kết quả

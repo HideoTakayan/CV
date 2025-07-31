@@ -13,7 +13,7 @@ NHAN = [
     "luu", "mit to nu", "nhan", "ot chuong", "tao", "thanh long", "vai thieu", "xoai"
 ]
 
-def xu_ly_anh(duong_dan):
+def xu_ly_anh(duong_dan): 
     """
     Doc va tien xu ly anh tu duong dan.
     """
@@ -22,8 +22,8 @@ def xu_ly_anh(duong_dan):
     
     anh = image.load_img(duong_dan, target_size=(224, 224))
     anh_array = image.img_to_array(anh)
-    anh_array = np.expand_dims(anh_array, axis=0)
-    anh_array = preprocess_input(anh_array)
+    anh_array = np.expand_dims(anh_array, axis=0) # Thêm chiều batch
+    anh_array = preprocess_input(anh_array) # Chuẩn hóa ảnh theo yêu cầu của MobileNetV2
     return anh_array
 
 def du_doan(duong_dan):
@@ -40,11 +40,11 @@ def du_doan(duong_dan):
     dau_vao = xu_ly_anh(duong_dan)
 
     # Dự đoán
-    ket_qua = mo_hinh.predict(dau_vao)
-    chi_so = np.argmax(ket_qua)
+    ket_qua = mo_hinh.predict(dau_vao) # Dự đoán trả về xác suất cho từng lớp
+    chi_so = np.argmax(ket_qua) # Lấy chỉ số lớp có xác suất cao nhất
     xac_suat = float(np.max(ket_qua)) * 100
 
-    if chi_so >= len(NHAN):
+    if chi_so >= len(NHAN): 
         raise IndexError(f"Chi so du doan {chi_so} vuot qua so luong nhan ({len(NHAN)}).")
 
     ten_loai = NHAN[chi_so]
@@ -60,8 +60,8 @@ def hien_thi_anh(duong_dan):
         raise ValueError(f"Khong doc duoc anh tai: {duong_dan}")
     
     cv2.imshow("Anh da chon", anh)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    cv2.waitKey(0) 
+    cv2.destroyAllWindows() 
 
 if __name__ == "__main__":
     # Đường dẫn tới ảnh dùng để kiểm thử

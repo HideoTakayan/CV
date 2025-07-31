@@ -30,7 +30,7 @@ class TaiDuLieu:
             image_size=(224, 224),
             batch_size=config.BATCH_SIZE,
             seed=config.SEED
-        )
+        ) 
         self.du_lieu_test_raw = tf.keras.utils.image_dataset_from_directory(
             config.TESTING_DATA,
             shuffle=config.SHUFFLE,
